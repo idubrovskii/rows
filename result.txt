@@ -1,0 +1,10 @@
+7738 - Wrong name format
+23636 - Wrong id format
+34119 - Wrong name format
+34127 - Wrong name format
+37756 - Wrong id format
+42361 - Wrong id format
+46083 - Wrong name format
+46161 - Invalid date: wrong format
+49317 - Invalid date: wrong format
+59986 - Invalid date: Could not parse '11.13.1991': Failed to parse time string (11.13.1991) at position 8 (9): Unexpected character
