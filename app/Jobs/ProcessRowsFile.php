@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Row as RowModel;
 use App\Spreadsheet\ChunkFilter;
+use App\Spreadsheet\Progress;
 use App\Spreadsheet\RowValidator;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,6 +25,7 @@ class ProcessRowsFile implements ShouldQueue
 
     private string $filename;
     private RowValidator $validator;
+    private Progress $progress;
     private array $errors = [];
 
     public function __construct(
@@ -31,7 +33,8 @@ class ProcessRowsFile implements ShouldQueue
     )
     {
         $this->filename = Storage::disk('local')->path($filename);
-        $this->validator = app(RowValidator::class);
+        $this->validator = new RowValidator();
+        $this->progress = new Progress($this->filename);
     }
 
     public function handle(): void
@@ -92,6 +95,7 @@ class ProcessRowsFile implements ShouldQueue
             if($row->isEmpty()) {
                 continue;
             }
+            $this->progress->set($row->getRowIndex());
             $data = $this->toInputArray($row);
             if ($this->validator->isValid($data)) {
                 $data['date'] = Carbon::parse($data['date']);
