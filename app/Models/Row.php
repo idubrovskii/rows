@@ -14,6 +14,10 @@ class Row extends Model
         'date',
     ];
 
+    protected $hidden = [
+        'id',
+    ];
+
     protected $casts = [
         'date' => 'date',
     ];

@@ -14,3 +14,4 @@ Route::middleware('auth.basic')->group(function () {
 
 });
 
+Route::get('list', [RowsController::class, 'index']);
