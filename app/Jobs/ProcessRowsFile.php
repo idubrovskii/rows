@@ -24,29 +24,31 @@ class ProcessRowsFile implements ShouldQueue
     const int CHUNK_SIZE = 1000;
 
     private string $filename;
+    private array $errors = [];
+
     private RowValidator $validator;
     private Progress $progress;
-    private array $errors = [];
 
     public function __construct(
         string $filename,
-    )
-    {
+    ) {
         $this->filename = Storage::disk('local')->path($filename);
-        $this->validator = new RowValidator();
-        $this->progress = new Progress($this->filename);
     }
 
     public function handle(): void
     {
+        $this->validator = new RowValidator();
+        $this->progress = new Progress($this->filename);
+
         try {
             foreach ($this->chunkRows($this->getRows()) as $chunk) {
                 RowModel::insert($chunk);
             }
             Storage::disk('local')->delete($this->filename);
         } catch (Throwable $t) {
-            $this->errors[0] = $t->getMessage();
+            $this->errors[0] = [$t->getMessage()];
         }
+
         $this->writeResults();
     }
 
